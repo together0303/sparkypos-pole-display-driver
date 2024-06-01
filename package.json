@@ -1,0 +1,28 @@
+{
+  "name": "sparkypos-pole-display-driver",
+  "version": "1.0.2",
+  "description": "A SparkyPOS Pole Display Driver With Node Serialport",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "VFD220 Pole Display",
+    "SparkyPOS",
+    "POS",
+    "Electon"
+  ],
+  "author": "TOGETHER0303",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^26.4.0"
+  },
+  "dependencies": {
+    "serialport": "^10.3.0",
+    "tableify": "^1.1.1"
+  },
+  "engines": {
+    "node": "18.16.1",
+    "npm": "9.5.1"
+  }
+}
