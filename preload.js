@@ -1,10 +1,12 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
-window.addEventListener('DOMContentLoaded', () => {
-    for (const versionType of['chrome', 'electron', 'node']) {
-        document.getElementById(`${versionType}-version`).innerText = process.versions[versionType]
-    }
+const { contextBridge, ipcRenderer } = require('electron')
 
-    document.getElementById('serialport-version').innerText = require('serialport/package').version
-
-})
+contextBridge.exposeInMainWorld('poleAPI', {
+  clear:    () => ipcRenderer.invoke('clear'),
+  reset:    () => ipcRenderer.invoke('reset'),
+  write:    (res) => ipcRenderer.send('write', res),
+  connect:  (port) => ipcRenderer.send('connect', port),
+  display:  (callback) => ipcRenderer.on('display', callback),
+  ping:     () => ipcRenderer.invoke('ping')
+});

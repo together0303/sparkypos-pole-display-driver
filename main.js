@@ -1,10 +1,13 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const url = require('url')
+const serialPort = require('./pole.display');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+
+require('./server');
 
 function createWindow() {
     // Create the browser window.
@@ -14,7 +17,7 @@ function createWindow() {
         backgroundColor: "#ccc",
         webPreferences: {
             nodeIntegration: true, // to allow require
-            contextIsolation: false, // allow use with Electron 12+
+            contextIsolation: true, // allow use with Electron 12+
             preload: path.join(__dirname, 'preload.js')
         }
     })
@@ -36,12 +39,38 @@ function createWindow() {
         // when you should delete the corresponding element.
         mainWindow = null
     })
+    
+    serialPort.init({
+        upper: 'Shawn\'s Flea Market',
+        lower: '',
+        main: mainWindow
+    });
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', () => {
+    ipcMain.handle('ping', () => 'pong')
+    ipcMain.handle('clear', () => {
+        serialPort.clear()
+        mainWindow.webContents.send('display', {upper: '', lower: ''})
+        return 'clear'
+    })
+    ipcMain.handle('reset', () => {
+        serialPort.reset()
+        return 'reset'
+    })
+    ipcMain.on('write', (event, data) => {
+        serialPort.text(data.upper, data.lower);
+        return 'write'
+    })
+    ipcMain.on('connect', (event, port) => {
+        serialPort.reset(port);
+        return 'write'
+    })
+    createWindow()
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {

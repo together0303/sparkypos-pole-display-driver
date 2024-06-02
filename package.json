@@ -18,6 +18,8 @@
     "electron": "^26.4.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "serialport": "^10.3.0",
     "tableify": "^1.1.1"
   },
