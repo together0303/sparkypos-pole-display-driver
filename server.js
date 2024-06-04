@@ -32,6 +32,13 @@ app.get('/display', (req, res) => {
     } else {
         serialPort.welcome();
     }
+
+    if (resetAfter) {
+        setTimeout(() => {
+            serialPort.welcome();
+        }, 5000)
+    }
+
     res.send({
         success: true,
         message: 'Received text'
@@ -39,12 +46,21 @@ app.get('/display', (req, res) => {
 });
 
 app.post('/display', (req, res) => {
-    const {upper, lower} = req.body;
+    const {upper, lower, resetAfter} = req.body;
 
     if (upper || lower) {
         console.log(`Receive the request upper: ${upper} lower: ${lower}`);
         serialPort.text(upper, lower);
+    } else {
+        serialPort.welcome();
     }
+
+    if (resetAfter) {
+        setTimeout(() => {
+            serialPort.welcome();
+        }, 5000)
+    }
+    
     res.send({
         success: true,
         message: 'Received text'

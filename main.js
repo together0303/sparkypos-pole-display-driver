@@ -41,8 +41,8 @@ function createWindow() {
     })
     
     serialPort.init({
-        upper: 'Shawn\'s Flea Market',
-        lower: '     THANK  YOU     ',
+        upper: 'SHAWNS\'S FLEA MARKET',
+        lower: '     THANK YOU     ',
         main: mainWindow
     });
 }
