@@ -4,13 +4,16 @@ const PoleDisplay = (() => {
     const encoder = new TextEncoder();
     const commands = {
         clear: '\x0C',
-        upper: '\x1B\x51\x44',
-        lower: '\x1B\x51\x43',
+        refresh: '\x1B\x40\x0C',
+        upper: '\x1B\x51\x41',
+        lower: '\x1B\x51\x42',
         suffix: '\x0D'
     }
     let serialPort = null;
     let initialized = false;
     let mainWindow = null;
+    let defaultUpper = '';
+    let defaultLower = '';
 
     const send_command = (command) =>  {
         if (serialPort && initialized) {
@@ -24,10 +27,14 @@ const PoleDisplay = (() => {
             
             initialized = true;
 
-            clear();
+            clear(true);
 
             if (data.main) mainWindow = data.main;
-            if (data.upper || data.lower) text(data.upper, data.lower);
+            if (data.upper || data.lower) {
+                defaultUpper = data.upper;
+                defaultLower = data.lower;
+                text(data.upper, data.lower);
+            }
             
             serialPort.on('error', (err) => {
                 console.log('Error: ', err.message);
@@ -37,8 +44,9 @@ const PoleDisplay = (() => {
         }
     }
 
-    const clear = () => {
-        send_command(commands.clear);
+    const clear = (refresh) => {
+        if (refresh) send_command(commands.refresh);
+        else send_command(commands.clear);
     }
 
     const upper_text = (text) => {
@@ -56,21 +64,26 @@ const PoleDisplay = (() => {
         clear();
 
         if(upper) upper_text(upper);
-        if(lower) lower_text(lower);
+
+        setTimeout(() => {
+            if(lower) lower_text(lower);
+        }, 100);
 
         if (mainWindow) {
             console.log({upper, lower})
             mainWindow.webContents.send('display', {upper, lower})
         }
     }
+    const welcome = () => {
+        text(defaultUpper, defaultLower);
+    }
     const reset = (port = 'COM3') => {
         if (serialPort) {
             serialPort.close(() => {
                 serialPort = null;
                 initialized = false;
-                init({port});
-                clear();
-                mainWindow.webContents.send('display', {upper: '', lower: ''})
+                init({upper: defaultUpper, lower: defaultLower, port});
+                mainWindow.webContents.send('display', {upper: defaultUpper, lower: defaultLower})
             });
         }
     }
@@ -78,7 +91,8 @@ const PoleDisplay = (() => {
         init,
         clear,
         text,
-        reset
+        reset,
+        welcome
     };
     
 })();

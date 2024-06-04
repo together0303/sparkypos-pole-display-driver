@@ -42,7 +42,7 @@ function createWindow() {
     
     serialPort.init({
         upper: 'Shawn\'s Flea Market',
-        lower: '',
+        lower: '     THANK  YOU     ',
         main: mainWindow
     });
 }

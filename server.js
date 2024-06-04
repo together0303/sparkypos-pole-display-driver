@@ -29,6 +29,8 @@ app.get('/display', (req, res) => {
     if (upper || lower) {
         console.log(`Receive the request upper: ${upper} lower: ${lower}`);
         serialPort.text(upper, lower);
+    } else {
+        serialPort.welcome();
     }
     res.send({
         success: true,
