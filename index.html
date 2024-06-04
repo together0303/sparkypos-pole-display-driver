@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>SparkyPOS Pole Display Driver</title>
+    <title>THANK YOU FOR USING SPARKYPOS</title>
+    <link rel="icon" type="image/x-icon" href="./pole_display.ico">
     <style>
         .w-full {
             width: 100%;
@@ -30,18 +31,41 @@
             padding: 0.5rem;
         }
         .display table {
-            min-width: 250px;
+            min-width: 300px;
+            background-color: black;
+            border: 20px solid black;
+            border-radius: 3px;
+            color: white;
         }
         .display td {
             text-align: center;
-            height: 50px;
+            height: 35px;
+            padding: 0.25rem;
+        }
+        .display tr:first-child td {
+            vertical-align: bottom;
+        }
+        .display tr:last-child td {
+            vertical-align: top;
         }
         .display button {
             padding: 3px 5px;
             font-size: 1rem;
+            min-width: 100px;
+        }
+        label {
+            font-weight: 400;
+        }
+        input {
+            padding: 3px 5px;
         }
         .input-container {
+            width: 300px;
+            margin: auto;
             margin-top: 1rem;
+            /* border: 1px solid gray; */
+            /* border-radius: 5px; */
+            padding: 1rem 0.5rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -60,15 +84,19 @@
 </head>
 
 <body>
-    <h1 class="text-center">SparkyPOS Pole Display Driver</h1>
+    <h1 class="text-center">THANK YOU FOR USING SPARKYPOS</h1>
 
     <div id="error"></div>
     <div id="info"></div>
     
-    <div class="input-container w-full">
-        <div>Com Port: <input type="text" name="port" id="port" value="COM3"/></div>
+    <fieldset class="input-container w-full">
+        <legend>COMPORT:</legend>
+        <div>
+            <label for="port">Com Port:</label>
+            <input type="text" name="port" id="port" value="COM3"/>
+        </div>
         <button id="connect">connect</button>
-    </div>
+    </fieldset>
     <div class="display w-full">
         <table>
             <tbody>
@@ -81,11 +109,18 @@
             <button id="reset">Reset</button>
         </div>
     </div>
-    <div class="input-container w-full">
-        <div>Upper Text: <input type="text" name="upper" id="upper" /></div>
-        <div>Lower Text: <input type="text" name="lower" id="lower" /></div>
+    <fieldset class="input-container w-full">
+        <legend>TEST:</legend>
+        <div>
+            <label for="upper">Upper Text:</label> 
+            <input type="text" name="upper" id="upper" />
+        </div>
+        <div>
+            <label for="lower">Lower Text: </label>
+            <input type="text" name="lower" id="lower" />
+        </div>
         <button id="write">Send</button>
-    </div>
+    </fieldset>
 </body>
 
 <script src="./renderer.js"></script>

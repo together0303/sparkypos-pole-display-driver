@@ -15,6 +15,7 @@ function createWindow() {
         width: 800,
         height: 600,
         backgroundColor: "#ccc",
+        icon: __dirname + '/pole_display.ico',
         webPreferences: {
             nodeIntegration: true, // to allow require
             contextIsolation: true, // allow use with Electron 12+
@@ -30,7 +31,7 @@ function createWindow() {
     }))
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {
@@ -41,7 +42,7 @@ function createWindow() {
     })
     
     serialPort.init({
-        upper: 'SHAWNS\'S FLEA MARKET',
+        upper: 'SHAWN\'S FLEA MARKET',
         lower: '     THANK YOU     ',
         main: mainWindow
     });
