@@ -14,6 +14,7 @@ const PoleDisplay = (() => {
     let mainWindow = null;
     let defaultUpper = '';
     let defaultLower = '';
+    let comport = 'COM3';
 
     const send_command = (command) =>  {
         if (serialPort && initialized) {
@@ -23,12 +24,13 @@ const PoleDisplay = (() => {
     const init = (data) => {
         if (!initialized) {
             console.log('connecting...', data.port)
-            serialPort = new SerialPort({ path: data.port ? data.port : 'COM3', baudRate: 9600});
+            serialPort = new SerialPort({ path: data.port ?? comport, baudRate: 9600});
             
             initialized = true;
 
             clear(true);
 
+            if (data.port) comport = data.port;
             if (data.main) mainWindow = data.main;
             if (data.upper || data.lower) {
                 defaultUpper = data.upper;
@@ -38,7 +40,7 @@ const PoleDisplay = (() => {
             
             serialPort.on('error', (err) => {
                 console.log('Error: ', err.message);
-                mainWindow.webContents.send('display', {upper: '', lower: '', error: err.message})
+                mainWindow.webContents.send('display', {upper: '', lower: '', port: comport, error: err.message})
             });
             
         }
@@ -71,19 +73,19 @@ const PoleDisplay = (() => {
 
         if (mainWindow) {
             console.log({upper, lower})
-            mainWindow.webContents.send('display', {upper, lower})
+            mainWindow.webContents.send('display', {upper, lower, port: comport})
         }
     }
     const welcome = () => {
         text(defaultUpper, defaultLower);
     }
-    const reset = (port = 'COM3') => {
+    const reset = (port = comport) => {
         if (serialPort) {
             serialPort.close(() => {
                 serialPort = null;
                 initialized = false;
                 init({upper: defaultUpper, lower: defaultLower, port});
-                mainWindow.webContents.send('display', {upper: defaultUpper, lower: defaultLower})
+                mainWindow.webContents.send('display', {upper: defaultUpper, lower: defaultLower, port: port})
             });
         }
     }

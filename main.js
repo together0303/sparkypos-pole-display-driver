@@ -3,6 +3,10 @@ const path = require('path')
 const url = require('url')
 const serialPort = require('./pole.display');
 
+const store = require('./store');
+const storePath = path.join(app.getPath('userData'), 'store.json');
+store.setStorePath(storePath);
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
@@ -31,7 +35,7 @@ function createWindow() {
     }))
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {
@@ -44,7 +48,8 @@ function createWindow() {
     serialPort.init({
         upper: 'SHAWN\'S FLEA MARKET',
         lower: '     THANK YOU     ',
-        main: mainWindow
+        main: mainWindow, 
+        port: store.get('port')
     });
 }
 
@@ -67,6 +72,7 @@ app.on('ready', () => {
         return 'write'
     })
     ipcMain.on('connect', (event, port) => {
+        if (port) store.set('port', port);
         serialPort.reset(port);
         return 'write'
     })

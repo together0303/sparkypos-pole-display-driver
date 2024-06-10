@@ -32,7 +32,12 @@ window.poleAPI.display((event, details) => {
   console.log(details)
   document.getElementById('upperText').innerText = details.upper;
   document.getElementById('lowerText').innerText = details.lower;
+  if (details.port) {
+    document.getElementById('port').value = details.port;
+  }
   if (details.error) {
     document.getElementById('error').innerText = details.error;
+  } else {
+    document.getElementById('error').innerText = '';
   }
 })
